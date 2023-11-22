@@ -11,6 +11,7 @@ import java.lang.ModuleLayer.Controller;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Victor;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -24,13 +25,16 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  Victor driveLeftSpark = new Victor (5);
-  Victor driveRightSpark = new Victor (6);
-  Victor driveLefVictor = new Victor (7);
-  Victor driveRightVictor = new Victor (10);
+  Joystick myController = new Joystick(0);
+  Victor driveLeftSpark = new Victor (3);
+  Victor driveRightSpark = new Victor (2);
+  Victor driveLeftVictor = new Victor (4);
+  Victor driveRightVictor = new Victor (1);
 
   double autonomousStartTime;
   double timeElapsed;
+  double leftspeed;
+  double rightspeed;
   @Override
   public void robotInit() {}
 
@@ -47,24 +51,31 @@ public class Robot extends TimedRobot {
     timeElapsed = Timer.getFPGATimestamp() - autonomousStartTime;
     if(timeElapsed < 5){
         driveLeftSpark.set(1.0);
-        driveLefVictor.set(1.0);
+        driveLeftVictor.set(1.0);
         driveRightSpark.set(-1.0);
         driveRightVictor.set(-1.0);
 
     }
     else if(timeElapsed < 5+2){
       driveLeftSpark.set(1.0);
-      driveLefVictor.set(1.0);
+      driveLeftVictor.set(1.0);
       driveRightSpark.set(1.0);
       driveRightVictor.set(1.0);
     }
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   @Override
   public void teleopPeriodic() {
+    leftspeed = myController.getRawAxis(5);
+    rightspeed = myController.getRawAxis(2);
+    driveLeftVictor.set(leftspeed);
+    driveLeftSpark.set(leftspeed);
+    driveRightVictor.set(rightspeed);
+    driveRightSpark.set(rightspeed);
   }
 
   @Override
